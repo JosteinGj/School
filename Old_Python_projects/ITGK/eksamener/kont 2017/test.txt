@@ -1,0 +1,9 @@
+butikk	vare	20
+butikk	vare	20
+butik	vare	20
+butiksk	vare	20
+butikk	vare	20
+butikk	vare	20
+butikk	vare	20
+butikk	vare	20
+butik	vare	20

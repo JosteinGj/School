@@ -1,0 +1,16 @@
+print("hei nå skal vi ha en liten matte/fysikksymbolquiz")
+print("spørsmål 1:hva betyr dette symbolet \u2247 ?")
+print("A:Er lik. B:er nesten lik C:er verken nesten lik eller lik")
+svar1=input("Ditt svar: ")
+if svar1.upper()=="C":
+    print("gz \n" )
+else:
+    print("git gud \n")
+print("spørsmål 2:hva betyr dette symbolet \u2207 ?")
+print("A:nabla, et mattematisk symbol B:nabla en gjeng med tullinger som tror de er like kule som delta \nC: Oppned delta fordi nabla er skapt av satan")
+svar2=input("ditt svar ")
+print("alle svar er rett\n")
+print("siste spørsmål: hva betyr dette symbolet: \u0394?")
+print("A: delta, en gresk bokstav og symbol for forandring. B:delta, guds valgte folk. C:\u0394 \u226B \u2207")
+svar3=input("ditt svar:")
+print("hovedpoenget her er å skape splid mellom linjeforeningene, svarene er triviale")

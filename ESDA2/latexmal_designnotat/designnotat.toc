@@ -1,0 +1,8 @@
+\select@language {norsk}
+\contentsline {section}{\numberline {1}Problembeskrivelse}{1}{section.1}
+\contentsline {section}{\numberline {2}Prinsipiell l\IeC {\o }sning}{1}{section.2}
+\contentsline {section}{\numberline {3}Realisering og test}{2}{section.3}
+\contentsline {section}{\numberline {4}Konklusjon}{2}{section.4}
+\contentsline {section}{\numberline {5}Takk}{2}{section.5}
+\contentsline {section}{Referanser}{2}{section*.3}
+\contentsline {section}{\numberline {A}Ekstra greier}{3}{appendix.A}

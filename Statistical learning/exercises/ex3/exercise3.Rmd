@@ -1,0 +1,55 @@
+---
+title: "ex3"
+author: "Jostein Gjesdal, Jesper Bengston"
+date: "2/28/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+library(ISLR)
+library(GGally)
+library(ggfortify)
+Autosub =  subset(Auto, select =-name)
+# Autosub$origin = factor(Autosub$origin)
+ggpairs(Autosub)
+
+cor(Autosub)
+Auto.lm= lm(mpg ~ . , data= Autosub)
+summary(Auto.lm)
+autoplot(Auto.lm, smooth.colour = NA)
+
+```
+1c)
+i: some of the predictors seem to be related to the response. 
+ii: spesifically year, origin displacement and weight
+iii: the coeficient for year sugests that every year cars get 0.777 higher mpg.
+
+  
+1d)
+the fitted vs residuals shows a clear pattern tending towards the lower right. This sugests we do not have a true linear dependency in our model. QQ plot looks good. obs 14 seems to have a high leverage. 
+```{r}
+Autosub2 =  subset(Auto, select =-name)
+Autosub2$origin = factor(Autosub2$origin)
+ggpairs(Autosub2)
+
+
+Auto.lm2= lm(mpg ~ displacement + weight + year *origin , data= Autosub2)
+summary(Auto.lm2)
+anova(Auto.lm2)
+```
+
+
+$$
+\hat \beta = \mathbf{(X^T X)}^{-1} X^T Y}
+
+$$
+
+\begin{align}
+ E[\hat\beta]=E[(\mathbf{X^T X)^{-1}X^T Y}] \\
+
+\end{align}

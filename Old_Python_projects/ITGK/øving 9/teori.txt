@@ -1,0 +1,10 @@
+1) TCP sender alle tapte pakker på ny desom det ikke komme en ACK.
+2) ping båndbredde og jitter, lag nedlastningshastighet og lagspikes.
+3) RSA er public key cryptography, en kan tenke på det som at man deler ut bokser
+med hengelåser, hvem som helst kan da låse esken,
+men kun de som har nøkkelen kan låse den opp
+4) virtual private network. det eret virituelt nettverk. slik at en kan dele
+nettresurser som data servere på flere nett. slik at en kan dele data over flere filialer i en organisasjon
+
+5)DDoS(distributed denial of service) er når man organiserer mange dataer til å sende en datamaskin
+så mange forespørsler at den ikke klarer å håndtere det.

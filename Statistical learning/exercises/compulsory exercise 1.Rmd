@@ -1,0 +1,349 @@
+---
+title: "Compulsory Exercise 1"
+author: "Jostein Gjesdal, Jesper Bengston"
+date: "2/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(ggplot2)
+library(dplyr)
+library(MASS)
+library(boot)
+```
+
+\section{Problem 1}
+In this task we have a univariate random variable $Y$ and a covariate $x$. Further we have observed a training set of independent pairs $$ \{x_i, y_i\} \thinspace, i \in \mathbb{N} $$ 
+
+we use the regression model $$ Y_i=f(x_i+\epsilon_i)$$
+where $f$ is the true regression model and \epsilon is an unobserved random variable with mean = 0 and variance$=\sigma²$. we use our training data to make an estimator function $\hat f$. we want to use $\hat f$ to predict a new observation from a new covariate $x_0$. We denote this prediction $\hat {f}(x_0)
+
+\subsection{Task: a}
+The definition of the MSE_test
+\begin{equation}
+
+  MSE_{test}(x_0)=(Y_0 - \hat{f}(x_0))^2
+
+\end{equation}
+with y_0 not part of the training set.
+
+
+\subsection{task b}
+
+\begin{align}
+
+  MSE_{test} &= E[(Y_i - \hat{f})^2]\\
+  &= E[ (f + \epsilon - \hat{f} + E[\hat{f}]-E[\hat{f}] )^2 ]\\
+  &= E[ ( (f -E[\hat{f}]) + \epsilon + (E[\hat{f}] - \hat{f}) )^2 ]\\
+  &= E[  (f -E[\hat{f}])^2] + E[\epsilon^2] +E[ 2 (E[\hat{f}] - \hat{f})\epsilon] + E[2(f -E[\hat{f}])\epsilon] + E[2(f -E[\hat{f}])( E[\hat{f}] - \hat{f})]  + E[(E[\hat{f}] - \hat{f})^2  ]\\
+  &= E[(f -E[\hat{f}])^2] + E[\epsilon^2] + E[(E[\hat{f}] - \hat{f})^2 ] \\
+  &= Bias(\hat{f})^2 + \sigma^2+ Var(\hat{f})\\
+\end{align}
+
+\subsection{task c}
+we can interpret the bias as the expected difference between the expected value of the predictor and the true function. meaning how wrong we would on average be if we had an infinite amount of test observations.
+
+the variance is a measure of the spread of a random variable, ie how do they distribute around the mean. A high variance means that we are unsure about each individual observation. 
+
+$\sigma²$ is the so called irreducible error, it stems from unobserved covariates and thus with a given model we can never get an error better than this value.
+
+\subsection{task d}
+True, a fexible method will be better
+False, a flexible method will be better as it reduces the bias while the large n prevents overfitting
+False, a flexible method will risk overfitting a small dataset while providing a negilible reduction in bias
+True, the flexible method will capture to much of the noise in the system
+
+
+\subsection{task e}
+TRUE,False,True, False
+
+\subsection{task f}
+0.17
+
+\subsection{task g}
+C
+
+\section{task 3}
+we use a logistic regression classifier for our data in this task. our predictor is on the form
+$$P(Y_i = 1| {\bf X}={\boldsymbol{x}}_i) = p_i = \frac{e^{\beta_0 + \beta_1x_{i1} + \beta_2 x_{i2} + \beta_3x_{i3} + \beta_4 x_{i4}}}{ 1+ e^{\beta_0 + \beta_1x_{i1} + \beta_2x_{i2}+ \beta_3x_{i3} + \beta_4 x_{i4}}} \ ,$$
+
+
+We abreviate $\beta_0 + \beta_1x_{i1} + \beta_2 x_{i2} + \beta_3x_{i3} + \beta_4 x_{i4}=\beta$ in the following derivation.
+
+\begin{align}
+  \log \left( \frac{p} {1 - p}\right) &= \log \left( p \right)-\log \left(1 - p \right)\\
+  &= \log \left( \frac {e^\beta} {1 + e^\beta} \right) - \log \left(1 - \frac{e^\beta} {1 + e^\beta} \right)\\
+  &= \log \left(\frac {e^\beta} {1 + e^\beta} \right) - \log \left( \frac{1 + e^\beta - e^\beta}{1 + e^\beta} \right)\\
+  &= \log \left(\frac {e^\beta} {1 + e^\beta} \right) - \log \left( \frac{1}{1 + e^\beta} \right)\\
+  &=\log \left(\frac{ \frac{ e^\beta } { 1 + e^\beta} }{ \frac{1} {1 + e^\beta} } \right)\\
+  &=\beta\\
+\end{align}
+
+\subsection{a}
+
+```{r}
+id <- "1GNbIhjdhuwPOBr0Qz82JMkdjUVBuSoZd"
+tennis <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", 
+    id), header = T)
+head(tennis)
+
+
+```
+
+```{r}
+
+glm_tennis =glm(Result ~ ACE.1 + ACE.2 + UFE.1 + UFE.2,data=tennis,family="binomial")
+summary(glm_tennis)
+
+```
+ACE.1 has the effect that if we increase it by one we multiply the odds by $\exp{0.36338}$
+
+```{r}
+# create new covariates
+tennis$ACEdiff = tennis$ACE.1 - tennis$ACE.2
+tennis$UFEdiff = tennis$UFE.1 - tennis$UFE.2
+
+
+# divide into training and test data
+n=dim(tennis)[1]
+n2=n/2
+set.seed(1234)
+train= sample(c(1:n),replace= F)[1:n2]
+tennistest= tennis[-train,]
+tennistrain=tennis[train,]
+
+```
+
+```{r}
+g = function (obj){
+    return(  exp(obj$coefficients %*% c(1,-1,4)) / (1+exp(c(obj$coefficients) %*% c(1,-1,4))))
+}
+r.tennis = glm(Result ~ ACEdiff + UFEdiff,data=tennistrain, family="binomial")
+predict.glm(r.tennis, tennistest,type="response")
+g(r.tennis)
+summary(r.tennis)
+
+```
+$$x_2=-\frac{\beta_1x}{\beta_2} -\frac{\beta_0}{\beta_2}$$
+
+```{r}
+a=r.tennis$coefficients
+
+cept = - a[1] / a[3]
+slo= -a[2]/a[3]
+
+
+ggplot(data=tennistrain, aes(ACEdiff, UFEdiff)) + geom_point(aes(color=Result)) + geom_abline(slope = slo, intercept = cept) + labs(color = "Player 1 wins")
+
+ggplot(data = tennistest, aes(ACEdiff, UFEdiff)) + geom_point(aes(color = Result )) + geom_abline(slope = slo, intercept = cept) + labs(color = "Player 1 wins")
+
+confusionmatrix= matrix(0,nrow=2,ncol=2)
+
+for(i in 1:nrow(tennistest))
+{
+  if(predict(r.tennis,tennistest[i,])>=0.5 && tennistest$Result[i]==1)
+  {
+    confusionmatrix[1,1]=confusionmatrix[1,1] + 1
+  } 
+  else if (predict(r.tennis, tennistest[i,]) >= 0.5 && tennistest$Result[i] == 0)
+  {
+    confusionmatrix[1,2]=confusionmatrix[1,2] + 1
+  }
+  else if(predict(r.tennis,tennistest[i,]) < 0.5 && tennistest$Result[i] == 1)
+  {
+    confusionmatrix[2,1]=confusionmatrix[2,1] + 1
+  }
+  else if (predict(r.tennis,tennistest[i,])<0.5 && tennistest$Result[i]==0) 
+  {
+    confusionmatrix[2,2]=confusionmatrix[2,2] + 1
+  }
+}
+confusionmatrix[1,2]
+confusionmatrix
+sensitivity=confusionmatrix[1,1]/(confusionmatrix[1,1]+confusionmatrix[2,1])
+selectivity=confusionmatrix[2,2]/(confusionmatrix[1,2]+confusionmatrix[2,2])
+sensitivity
+selectivity
+```
+\subsection{task d}
+LDA and QDA analysis
+In discriminant analysis we try to take an inverse approach from what we use in the regression model.
+
+In the regression model, and KNN methods for that matter, we directly estimate the probability  for given class,
+$$Pr(Y=k|X=x)$$
+In Discriminant analysis we rather find
+$$Pr(X=x | Y=k) = f_k(x)= \frac{\exp \left(\frac{-(x-\mu_k)^T \Sigma^{-1}(x-\mu_k)}{2}\right)}{(2\pi)^{p/2} |\Sigma|^{1/2}} $$
+We can then use Bayes theorem to find the other probability
+
+Giving the formula:
+
+$$
+Pr(Y = k | X=x)=\frac{\pi_kf_k(x)}{\sum_{l=1}^n \pi_l f(_l(x)) }
+$$
+
+with $\pi_k = Pr(Y = k)$,
+$\Sigma = cov(x)$, 
+$\mu_k = E[f_k(x)]$
+
+
+\subsection{task e}
+assume $n=2, \pi_0=\pi_1=0.5$
+
+\begin{align}
+&Pr(Y = 0 | X = x) = Pr(Y = 1 | X = x) \\
+&= \pi_0 \frac{ \exp \left(\frac{-(x-\mu_k)^T \Sigma^{-1}(x-\mu_k)}{2}\right)}{(2\pi)^{p/2} |\Sigma|^{1/2}} = \pi_1 \frac{ \exp \left(\frac{-(x-\mu_k)^T \Sigma^{-1} (x-\mu_k)}{2}\right)}{(2\pi)^{p/2} |\Sigma|^{1/2}}\\
+
+&\implies \log \left( \pi_0 \frac{ \exp \left(\frac{-(x-\mu_k)^T \Sigma^{-1}(x-\mu_k)}{2}\right)}{(2\pi)^{p/2} |\Sigma|^{1/2}}\right) = \log \left(\pi_1 \frac{ \exp \left(\frac{-(x-\mu_k)^T \Sigma^{-1}(x-\mu_k)}{2}\right)}{(2\pi)^{p/2} |\Sigma|^{1/2}}\right) \\
+
+&\log(\pi_0) -\frac{(x-\mu_0)^T \Sigma^{-1}(x-\mu_0)}{2} = \log(\pi_1) -  \frac{(x-\mu_1)^T \Sigma^{-1}(x-\mu_1)}{2}\\
+&\log(\pi_0) - \frac{x^T \Sigma^{-1}x-\mu_0^T \Sigma^{-1}x-x^T\Sigma^{-1}\mu_0+\mu_0^T \Sigma^{-1}\mu_0}{2} = \log(\pi_1) - \frac{x^T \Sigma^{-1}x - \mu_1^T \Sigma^{-1}x - x^T\Sigma^{-1}\mu_1 + \mu_1^T \Sigma^{-1}\mu_1}{2}\\
+&\log(\pi_0) + x^T\Sigma^{-1}\mu_0 - \frac{\mu_0^T \Sigma^{-1}\mu_0}{2} = \log(\pi_1) + x^T\Sigma^{-1}\mu_1 - \frac{\mu_1^T \Sigma^{-1}\mu_1}{2}\\
+
+\end{align}
+
+
+```{r}
+cov1=cov(cbind(tennistrain$ACEdiff, tennistrain$UFEdiff))
+mean(tennistrain$ACEdiff)
+mu02=mean(tennistrain$UFEdiff)
+mu02
+invcov = solve(cov1)
+
+mu01=mean(tennistrain[tennistrain$Result==0,]$ACEdiff)
+mu02=mean(tennistrain[tennistrain$Result==0,]$UFEdiff)
+mu11=mean(tennistrain[tennistrain$Result==1,]$ACEdiff)
+mu12=mean(tennistrain[tennistrain$Result==1,]$UFEdiff)
+pi1=length(tennistrain[tennistrain$Result==1,]$Result)/length(tennistrain$Result)
+pi1
+pi0=1-pi1
+invcov
+A=invcov[1,1]
+B=invcov[1,2]
+C=invcov[2,1]
+D=invcov[2,2]
+```
+
+\begin{align}
+Pr(Y = 1 | X=x) &= \frac{\pi_1 f_1(x)}{\sum_{l=0}^1 \pi_l f(_l(x)) }= 1/2\\
+&\pi_1f_1(x) = \frac{\sum_{l=0}^1 \pi_l f(_l(x))}{2}\\
+&\log(\pi_1f_1(x)) = \log(\pi_0 f_0(x))\\
+&\log(\pi_0) + x^T\Sigma^{-1}\mu_0 - \frac{\mu_0^T \Sigma^{-1}\mu_0}{2} = \log(\pi_1) + x^T\Sigma^{-1}\mu_1 - \frac{\mu_1^T \Sigma^{-1}\mu_1}{2}\\
+&\log(\pi_0) + x^T\Sigma^{-1}\mu_0 - x^T\Sigma^{-1}\mu_1 = \log(\pi_1) +\frac{\mu_0^T \Sigma^{-1} \mu_0 - \mu_1^T \Sigma^{-1} \mu_1}{2}\\
+& x^T\Sigma^{-1}\mu_0 - x^T\Sigma^{-1}\mu_1 = \log(\pi_1)-\log(\pi_0)+\frac{\mu_0^T \Sigma^{-1} \mu_0 - \mu_1^T \Sigma^{-1} \mu_1}{2}\\
+&\mu_{01}(Ax_1+Bx_2)+\mu_{02}(Bx_1+Cx_2)-(\mu_{11}(Ax_1+Bx_2)\mu_{12}(Bx_1+Cx_2))=\log(\pi_1)-\log(\pi_0)+\frac{\mu_0^T \Sigma^{-1} \mu_0 - \mu_1^T \Sigma^{-1} \mu_1}{2}\\
+&(B(\mu_{01}-\mu_{11})+C(\mu_{02}-\mu_{12}))x_2=-(A(\mu_{01}-\mu_{11})+B(\mu_{02}-\mu_{12}))x_1+\log(\pi_1)-\log(\pi_0)+\frac{\mu_0^T \Sigma^{-1} \mu_0 - \mu_1^T \Sigma^{-1} \mu_1}{2}\\
+
+\end{align}
+
+$$a=-\frac{(A(\mu_{01}-\mu_{11})+B(\mu_{02}-\mu_{12}))}{(B(\mu_{01}-\mu_{11})+C(\mu_{02}-\mu_{12}))}$$
+
+$$b=\frac{\log(\pi_1)-\log(\pi_0)+\frac{\mu_0^T \Sigma^{-1} \mu_0 - \mu_1^T \Sigma^{-1} \mu_1}{2}}{(B(\mu_{01}-\mu_{11})+C(\mu_{02}-\mu_{12}))}$$
+
+
+
+```{r}
+slopestyle= -(A * (mu01 - mu11) +B * (mu02-mu12)) / (B * (mu01-mu11)+D*(mu02-mu12))
+slopestyle
+interloper= (log(pi1/pi0)+(t(c(mu01,mu02)) %*% invcov %*% c(mu01,mu02) - t(c(mu11,mu12)) %*% invcov %*% c(mu11,mu12))/2)/(B*(mu01-mu11) + D*(mu02-mu12))
+interloper
+
+ggplot(data=tennistrain, aes(ACEdiff,UFEdiff)) + geom_point(aes(color=Result)) + geom_abline(slope =slopestyle , intercept = interloper) + labs(color = "Player 1 wins")
+
+```
+
+
+```{r}
+lda.tennis=lda(Result ~ ACEdiff+UFEdiff,tennistrain, priors=c(pi0, pi1))
+summary(lda.tennis)
+classes = predict(lda.tennis,tennistest)$class
+lda.confusionmatrix=matrix(c(0,0,0,0),nrow=2,ncol=2)
+for( i in 1:nrow(tennistest))
+{if (classes[i]==tennistest$Result[i])
+  { if(tennistest$Result[i] == 1)
+    {
+    lda.confusionmatrix[2,2] = lda.confusionmatrix[2,2]+1
+    }else { lda.confusionmatrix[1,1] = lda.confusionmatrix[1,1]+1}
+}else
+  { if(tennistest$Result[i] == 1)
+    {
+      lda.confusionmatrix[1,2] = lda.confusionmatrix[1,2]+1
+    }else { lda.confusionmatrix[2,1] = lda.confusionmatrix[2,1]+1}}  
+}
+
+lda.confusionmatrix
+```
+
+```{r}
+qda.tennis=qda(Result ~ ACEdiff+UFEdiff,tennistrain, priors=c(pi0, pi1))
+summary(qda.tennis)
+classes = predict(qda.tennis,tennistest)$class
+qda.confusionmatrix=matrix(c(0,0,0,0),nrow=2,ncol=2)
+for( i in 1:nrow(tennistest))
+{if (classes[i]==tennistest$Result[i])
+  { if(tennistest$Result[i] == 1)
+    {
+    qda.confusionmatrix[2,2] = qda.confusionmatrix[2,2]+1
+    }else { qda.confusionmatrix[1,1] = qda.confusionmatrix[1,1]+1}
+}else
+  { if(tennistest$Result[i] == 1)
+    {
+      qda.confusionmatrix[1,2] = qda.confusionmatrix[1,2]+1
+    }else { qda.confusionmatrix[2,1] = qda.confusionmatrix[2,1]+1}}  
+}
+  
+qda.confusionmatrix
+```
+
+
+\subsection{Task h}
+
+Based on the confusion matricies produced we would conclude that lda is the appropriate model.
+
+
+\section{Task 4}
+
+\subsection{4a}
+
+10-fold cross validation:
+To perform a 10 fold crossvalidation we will seperate the system into 10 parts and use 9/10th of the avalible data to train and the last 10th to validate. 
+
+to calculate the total training error we would use standard MSE on each of the 10 training sets, and then average over them to find CV. 
+
+\subsection{4b}
+
+TRUE, TRUE, FALSE, FALSE
+\subsection{4c}
+```{r}
+id <- "1I6dk1fA4ujBjZPo3Xj8pIfnzIa94WKcy"  # google file ID
+d.chd <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", 
+    id))
+
+r.chd = glm(chd ~ sbp + sex ,data = d.chd, family="binomial")
+summary(r.chd)
+chd.coefs = r.chd$coefficients
+truemean = exp(c(chd.coefs) %*% c(1,140,1))/(1+exp(c(chd.coefs) %*% c(1,140,1)))
+
+```
+```{r}
+f =function(obj)
+  {
+    return(  exp(obj$coefficients %*% c(1,140,1)) / (1+exp(c(obj$coefficients) %*% c(1,140,1))))
+  }
+
+B=1000
+est = rep(NA, B)
+for (i in 1:B)
+{
+  x = sample_n(d.chd,350,replace = TRUE)
+  thisreg = glm(chd ~ sbp + sex ,data = x, family="binomial")
+  
+  est[i] = f(thisreg)
+  
+}
+
+sd(est)
+quantile(est,c(0.025,0.975))
+
+```
+When we find the confidence interval using bootstrapping we are finding the uncertanty in our estimate of the probability. 

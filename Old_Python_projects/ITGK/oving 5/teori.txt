@@ -1,0 +1,19 @@
+a)
+antall heltall som kan srives med 4 bytes 2^4-1=15
+b)
+en DAC er en digital analog konverter. brukes blant annet i musikk anlegg
+c)
+18(ti talls)=10010(to talls) 12(16talls)
+d)
+OLE= 100 1111 100 1100 100 0101
+e)
+en pixel er et punkt i et bilde. pixelen blir angitt en farge. når mange pixeler
+settes sammen kan man lage bilder
+f)
+analog lyd er strøm signaler som kan brukes til å drive en høytaler.
+digital lyd er en streng med data som inneholder info om en lydbølge.
+vi kan sample en analog lyd og få en digital representasjon av lyden
+vi kan sende den digitale lyden gjennom en DAC for å få tilbake en ganske presis
+versjon av den orginale innspillingen
+g)
+metadata er data om data. feks. er .txt en slags meta data som sier at dette er en textfil

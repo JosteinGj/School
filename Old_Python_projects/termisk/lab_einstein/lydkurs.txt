@@ -1,0 +1,97 @@
+lydkurs
+
+ole harald er i fra gokk o lærte å lage lyd på barneskolen
+han ble med i delta og ble lurt til å være lyd mann fordi han kunne lage lyd
+vil ha et glass melk en mlp tsjorte og en stuffed bunny for å sove om natta
+
+ingen krav om å være anstendig under kurset
+
+økt 1 teori
+økt 2 intro praksis
+økt 3 praksis
+økt 4 eksamen
+
+dette er lydbordet delta har
+hvordan virker det
+	høyre og venstre del
+	venstre inn og høyre ut
+	instillinger på venstreside 
+kanaler 101
+ vi har flere kanaler på miksebordet
+	kanalene er uavhenginge
+	kan eq og sånn separat
+
+inkabler
+	xlr 
+	jack 6.35mm og 3.5
+		jack trs-- google
+	phono høyre og venstre kan koble inn i xlr men er ikke vits
+
+pad/HPF
+	pad
+		padder signalet slik at det blir lavere
+	hpf
+		high pass filter filtrer ut alle frekvenser under gitt Hz
+
+gain/preamp
+	øker signalet før ampen
+
+
+comp (compression)
+	jevner ut signalet får mer balansert lydbilde amplitude messig for å unngå spikeing
+EQ
+	equiliser justerer volumet på spesifikke frekvenser
+	
+AUX
+	hvor mye av signalet vi vil ha inn i AUX
+		hvor mye vi vil ha inn hver signal 
+???
+FX effekter
+
+Pan høyre /venstre lydspor
+
+På/av
+peak
+	vi vil ikke at den skal lyse
+
+Fader
+	volumkontroll for kanalen
+grupper
+	1-2
+	3-4
+	ST
+PFL(prefader listen)
+	høre på forhånd
+
+mono
+	alt blir likt
+stereo
+	forskjell på h/v
+
+
+phantom
+	noen mikrofoner trenger strøm inn
+	kondensatorer trenger vanligvis phantom
+	
+hovedkontroll
+	hoved fader
+
+grupper
+	ST knapp
+	styre lyd bra
+
+
+AUX volumkontroller
+
+headset monitor
+	hjelpe de som lager lyd.
+
+
+
+
+
+
+
+
+
+

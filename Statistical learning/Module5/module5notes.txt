@@ -1,0 +1,87 @@
+The bootstrap in statistics
+
+Idea use the data iself to get more info about a statistic, we used the same data to estimate the statistic
+
+
+standard deviation of the sample median 
+
+assume that mwe obsereve a random sample x1,2x ,x3,.. xn from an unknown probdist f, we are instereste in saying something abou bht e populatio median, thus we calculate the sample median ~x
+	-> Q: how accuarte is this ~x as an estimator?
+
+we want to find a std deviation
+
+
+
+assume we knwo f the we can repeatedly take samplesa an d tcalculate the standard deviantion ot obtain an estimate.
+
+ex normal distribution
+
+	set.seed(123)
+	n= 101 
+	B= 1000
+	estimator rep (NA,B)
+	xs= rnorn(n)
+
+
+
+
+
+
+
+
+moving from sim to boostrat (f unknown)
+the botstrap method uses obser data to ext the imporical dist ^f that is each obs value of x is given prob 1/n
+
+a bootstrap sample x1*, x2* ,x3* is a rand samp dawn from f^
+
+a simple way to obtain the bostrap sampe is to deraw iwht replacement from x1, x2, .., xn
+
+Note: our boostraps sample consist of n members of x1,x2,..,xn some appearing more than once, other appearing at all
+
+
+we always need to sample the same amount of bootstrap variables as we have original values.
+
+
+
+we then compare the sample median
+
+
+we take the original median 
+
+and then we take the bootstrap samples and take the median of that.
+
+we then want to do this a lot of times.
+
+Algorithm
+
+Draw B boostraps sampse with replacement from original doata
+2 evaluate the statuisitci of interest of the bootrsap sample to get the bth boostrap sample
+
+estimabte the squared satndard deviation of all the bootstrap samples empirically.
+
+
+
+bootstraping in multiple linear regression 
+
+when we have several predictors in one observation we cant chop a value.
+
+
+
+
+Bagging (module 8)
+builds on bootstraping.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

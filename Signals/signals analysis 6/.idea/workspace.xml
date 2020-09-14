@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="e6654ae7-0f63-4ca5-847d-2a25d64c0f36" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1ZNpGsYLB17BhB6YXKBL3jQLkWD" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RunManager" selected="Python.test">
+    <configuration name="ex63" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="signals analysis 6" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/ex63.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="signals analysis 6" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/test.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.test" />
+        <item itemvalue="Python.ex63" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="e6654ae7-0f63-4ca5-847d-2a25d64c0f36" name="Default Changelist" comment="" />
+      <created>1584689313591</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1584689313591</updated>
+      <workItem from="1584689316566" duration="498000" />
+      <workItem from="1584782252095" duration="1472000" />
+      <workItem from="1586156201603" duration="1463000" />
+      <workItem from="1586248514388" duration="4359000" />
+      <workItem from="1586430165260" duration="4163000" />
+      <workItem from="1592225815126" duration="46000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1212" y="265" width="424" height="506" key="FileChooserDialogImpl" timestamp="1592225855877">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1212" y="265" width="424" height="506" key="FileChooserDialogImpl/0.0.1920.1040/1920.0.1920.1080@0.0.1920.1040" timestamp="1592225855877" />
+    <state width="907" height="272" key="GridCell.Tab.0.bottom" timestamp="1586436440180">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="907" height="272" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586436440180" />
+    <state width="907" height="272" key="GridCell.Tab.0.center" timestamp="1586436440179">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="907" height="272" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586436440179" />
+    <state width="907" height="272" key="GridCell.Tab.0.left" timestamp="1586436440179">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="907" height="272" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586436440179" />
+    <state width="907" height="272" key="GridCell.Tab.0.right" timestamp="1586436440179">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="907" height="272" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586436440179" />
+    <state width="1878" height="341" key="GridCell.Tab.1.bottom" timestamp="1586253323248">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1878" height="341" key="GridCell.Tab.1.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1586253323248" />
+    <state width="1878" height="341" key="GridCell.Tab.1.center" timestamp="1586253323248">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1878" height="341" key="GridCell.Tab.1.center/0.0.1920.1040@0.0.1920.1040" timestamp="1586253323248" />
+    <state width="1878" height="341" key="GridCell.Tab.1.left" timestamp="1586253323247">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1878" height="341" key="GridCell.Tab.1.left/0.0.1920.1040@0.0.1920.1040" timestamp="1586253323247" />
+    <state width="1878" height="341" key="GridCell.Tab.1.right" timestamp="1586253323248">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1878" height="341" key="GridCell.Tab.1.right/0.0.1920.1040@0.0.1920.1040" timestamp="1586253323248" />
+    <state x="928" y="155" key="SettingsEditor" timestamp="1584689410726">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="928" y="155" key="SettingsEditor/0.0.1920.1040@0.0.1920.1040" timestamp="1584689410726" />
+    <state x="1117" y="350" key="com.intellij.ide.util.TipDialog" timestamp="1592225815383">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1117" y="350" key="com.intellij.ide.util.TipDialog/0.0.1920.1040/1920.0.1920.1080@0.0.1920.1040" timestamp="1592225815383" />
+    <state x="1117" y="350" key="com.intellij.ide.util.TipDialog/0.0.1920.1040@0.0.1920.1040" timestamp="1586430165700" />
+    <state x="1097" y="233" width="672" height="678" key="search.everywhere.popup" timestamp="1586156234780">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1097" y="233" width="672" height="678" key="search.everywhere.popup/0.0.1920.1040@0.0.1920.1040" timestamp="1586156234780" />
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/signals_analysis_6$test.coverage" NAME="test Coverage Results" MODIFIED="1586436440170" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/signals_analysis_6$ex63.coverage" NAME="ex63 Coverage Results" MODIFIED="1584689443144" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+  </component>
+</project>

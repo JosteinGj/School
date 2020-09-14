@@ -1,0 +1,31 @@
+a)
+    primær lagring er ikke permanet, men tømmes hver gang pcen skrus av
+    det er svært raskt bruks minne som pcen bruker direkte til å utføre oppgavene sine
+    feks. RAM(Random Acces Memmory)/system minne som brukes til å lagre filene til alle
+    programmene pcen forøyeblikket behandler
+    ett annet eksempel er cpu cache,
+    dette er ekstremt rask minne men det er ikke større enn et par megabyte
+    cachen brukes til å lagre data som prosessoren sannsynligvis trenger snart
+
+    sekundær minne er permanent lagring, type harddisk og SSD
+    disse minnene holder på data selv om pcen er av. mens primær minne tømmes hver gang pcen skrus av.
+
+
+    b)
+
+        hardisk: permanent/ tilfeldig, men mye raskere sekvensiell lesning og skriving
+        SSD: permanent/ tilfeldig,
+        RAM: volatilt/tilfeldig,
+    c) på grunn av halvleder egenskapene til silisium
+    d)  hver pixel konverteres til et stykke data(binære tall) som definerer egenskapene for den
+        pixelen som feks. farge og lysstyrke. dermed må alle digitale bilder ha en definert oppløsning
+        feks. 1920*1080
+        lyd behandles ved å sample lydden, altså måle det analoge frekvens signalet med bestemte intervaller
+        og lagre dette. dette kan da fourier transformeres for å komprimere lyden.
+        tekst behandles ved å definere at en gitt byte er en karakter feks 100 0001= A
+    e) 32 000B*8/40s=256000b/40s=64kb/s
+    f)  et OS er et opperativ system, det fungerer som bindeleddet mellom hardware og applikasjoner
+        som feks. pycharm. opperativ systemet håndterer all input og output til og fra hardwaren.
+        opperativ systemet lager en felles plattform som andre programmer kan bruke. det er derfor
+        en ikke kan kjøre en .exe fil i ubuntu eller macOS. men det gjør der i mot at et .exe program
+        kan kjøres på alle windows pcer gitt de oppfylle systemkravene.

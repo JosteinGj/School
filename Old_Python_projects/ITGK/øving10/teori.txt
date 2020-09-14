@@ -1,0 +1,22 @@
+1)en algoritme et en serie med instrukser som følges for å oppnå et resultat
+2)O(n^2) betyr at kjøre tiden/ antall steg er har en
+ proporsjonalitetsfaktor n^2 i forhold til innput av størrelse n
+ eks. selection sort og multiplikasjon
+3) en rekursiv algoritme er en algoritme som referere til seg selv.
+ en iterativ algoritme kjører en loop, type for/while løkker
+ en rekursiv algoritme "looper" ved å kalle seg selv igjen.
+ prima eksempel ackermann algoritmen
+4) det finnes uendelig mange forskjellige systemutvikligsmodeller eksempelvis
+lineær utvikling "waterfall" hvor prosjktet utvikles som en produksjons linje,
+først analyse, design konstruksjon testing deployment og vedlikehold
+en annen er incremental hvor en inkrementalt lager kode som fungerer og bygger videre på denne
+og aldri lanserer noe som ikke fungerer
+ forskjellen er hva som prioriteres i programmet, om en skal lage programmvare fort, uten feil eller
+ mer adaptivt
+5) en smidig utviklingsprosess er en utviklingsprossess hvor en fokuserer på å kunne skifte arbeidsområde
+svært ofte.
+
+6) en kravspesifikasjon er et krav som stilles til et produkt, feks et kalkulator program skal kunne ta trig funksjoner etc.
+
+
+

@@ -1,0 +1,12 @@
+a) ARPANET utviklet av DARPA i sammarbeid med UCLA og Stanford research institute
+b) paritets bits detetkterer feil med å sende en ekstra bit, og la mottakerene forvente at byten skal ha en partalls verdi
+ved å da sjekke om byten er et partall kan man se om byten har forandret seg mens den ble sendt.
+c) circuit switching er å en måte å komunisere ved etablere en dedikert kobling mellom sender og mottaker en bruker da all kapasiteten på en gitt linje. dette betyr at kapasiteten styres av antall linjer
+ved packet switching konverteres dataen til pakker av en gitt størrelse. disse pakkene sendes jevnt over alle linjene i nettverket mot mottakeren dermed styres kapasiteten av summen av kapasiteten på alle linjene.
+d)  applikasjon: protokoller som kommuniserer direkte med applikasjoner på pcen( HTTP,SMTP FTP)
+    transport: kommuniserer med protokollene i applikasjonsnivået og setter feil deteksjon slik at mottakeren kan sette sammen packetsene
+    internet: fester ip adressen på slik at du en kan se hvor dataen kommer fra og skal hen
+    datalink: konverterer dataen til analoge signaler som kan sendes gjennom nettverks kabler og håndterer MAC adresser
+    physical:? tull
+E) routere fungere som bindeleddet i et mindre lokalt nettverk og deler ut spesifikke ip adresser til alle tingene som er koblet til ( tenk rom nummer i et leilighetskompleks
+    routeren blir da gate adressen og alle koblet til routeren får sin egen under adresse men må komunisere gjennom routeren for å komme på internett.

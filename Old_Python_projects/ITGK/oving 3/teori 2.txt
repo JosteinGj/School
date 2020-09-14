@@ -1,0 +1,27 @@
+1.  psuedokode er en svært høy nivå måte å beskrive et program eller en algoritme.
+    det er kode som er laget for at menesker skal forstå dem ikke maskiner,
+    psuedo kode mangler derfor ofte essensielle momenter for at maskinen skal forstå koden.
+
+2.  flyt diagram er en måte å strukturere "logikk treet i en algoritme".
+
+3.  debugging er testing av et program. altså ser en etter "bugs" som er feil i koden,
+    enten syntax eller semantiske feil.
+    altså at "grammatikken" i koden er feil og maskinen da ikke forstår den
+    eller semantiske feil, da forstår maskinen koden, men gjør ikke det vil vil den skal
+
+4.  i et høy nivå programmeringspråk er mye av den direkte interaksjonen med selve hardwaren
+    abstraktert vekk. eks. C++ og python. der python er på sett og vis litt høyere nivå enn C++
+    lav nivå programmering er nede på maskinkode og assembly. da jobber man direkte med hardwaren
+    og må selv ta hånd om blant annet minne adresser osv.
+
+5.  Fetch instruction: hent den neste instruksjonen i program counteren
+    Decode instruction: dekod instruksjonen og forstå hva den sier vi skal gjøre
+    fetch data: hent eventuell nødvending data fra minnet
+    Execute instruction: utfør instruksjonen
+    Return: send tilbake resultatet enten til et spesifisert sted i minnet eller til
+    kontroll enheten
+6.
+   program telleren forteller hvor den neste instruksjonen ligger, den teller hvor lang den forrige
+   instruksjonen var og setter neste instruksjon til å starte rett etter den
+   feks. en 16 byte instruksjon fra hentes fra 2504 etter denne instruksjonen har blitt startet
+   oppdateres PCen til å vise 2520, som da er der neste instruks starter

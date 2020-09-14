@@ -1,0 +1,10 @@
+a) et intranett er et nett som er lukket og ikke MÅ være koblet opp mot selve internettet. det er et slags lukket internett.
+feks. ntnu har et intranett slik at så lenge routeren på skolen fungerer kan ntnus sider brukes selv om internett ut av nettet ikke fungerer
+b) en host er en data som tar i mot en forespørsel og responderer på den. dermed kan ting koblet på et nett bli en host siden alle pcer har muligheten til å sende og motta forespørseler
+en router er en host som styrer data trafikken på et netverk
+c) en protokoll er et sett med instrukser som beskriver hvordan noe skal gjøres. f.eks hvordan skal en nettside sendes. det er en slags oppskrift på hvordan dataen skal se ut og hvordan den skal behandles
+d) en ip adresse er din adresse på et nettverk, denne ipen deles ut av nett levrandøren din, som holder en server som forteller hvor din ip er. routeren deler så ut intern ip adresser i sitt nett.
+dermed når noen vil sende oss noe sier vi send det til denne ipen og den blir sendt til vår router, som kjenner igjen den interne ip adressen slik at vi kan få dataen vår.
+
+e) ipv4 har bare 32bit adresser og dermed kan vi kun ha ca 4millarder uniker adresser, derfor må vi innføre ipv6 som bruker en 128bits adresse, og dermed kan vi ha ca 340 undecillioner adresser.
+f) ip protokollen plasserer en "Header" på data pakker som skal sendes som fungerer som en post adresse med en destinasjon og en retur adresse.
