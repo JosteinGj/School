@@ -104,32 +104,23 @@ def task2():
 
 
 def task3():
-    def echoFilter(a,R):
-        numerator, denominator = np.zeros(R+1), 1
+    def echoFilter(a, R):
+        numerator, denominator = np.zeros(R + 1), 1
         numerator[0], numerator[R] = 1, a
         return numerator, denominator
-    
-    a_vals = [0.7,0.5]
-    R_vals = [5,10] 
+    a_vals, R_vals = [0.7, 0.5], [5, 10] 
     rate, data = wavfile.read("piano.wav")
     wavfile.write(f"piano1.wav",rate,data)
-    num,denom=echoFilter(0.5,100)
-    yout=sig.lfilter(num,denom,data)
-    plt.plot(data)
-    plt.plot(yout)
-    plt.show()
     impulse = np.zeros(100)
     impulse[0] = 1
-
     for a in a_vals:
         for R in R_vals:
-            num, denom=echoFilter(a,R)
-            y=sig.lfilter(num,1,impulse)
-            
-            w, h = sig.freqz(num,1)
+            num, denom = echoFilter(a, R)
+            y = sig.lfilter(num, denom, impulse)
+            w, h = sig.freqz(num, denom)
+            yout=sig.lfilter(num, denom, data)
+            wavfile.write(f"piano_a={a}R={R}.wav", rate, yout)
 
-            #print(y)
-            
             plt.stem(y,label="impulse response")
             plt.xlabel("samples")
             plt.ylabel("signals amplitude")
@@ -145,9 +136,6 @@ def task3():
             plt.legend(loc="upper right")
             plt.savefig(f"task3_echo_filter_freqResp_a={a}R={R}.pdf")
             plt.show()
-            
-            yout=sig.lfilter(num,1,data)
-            wavfile.write(f"piano_a={a}R={R}.wav",rate,yout)
 
             plt.plot(yout)
             plt.xlabel("time (s)")
@@ -159,16 +147,16 @@ def task3():
 
     
 
-task3()
+#task3()
 
 def task3_part2():
-    def echoFilter2(a,R,N):
-        numerator, denominator =np.zeros((R)*N), np.zeros(R+1) 
-        numerator[0], numerator[(N-1)*R] =  1, -1*(a**N)
-        denominator[0],denominator[R] = 1, -a
+    def echoFilter2(a, R, N):
+        numerator, denominator =np.zeros( R*(N + 1)), np.zeros(R+1) 
+        numerator[0], numerator[N * R] =  1, - 1 * (a ** N)
+        denominator[0], denominator[R] = 1, -a
         return numerator, denominator
     
-    a_vals = [0.5,0.7]
+    a_vals = [0.5, 0.7]
     R_vals = [5, 10]
     N_vals = [5, 10]
     rate, data = wavfile.read("piano.wav")
