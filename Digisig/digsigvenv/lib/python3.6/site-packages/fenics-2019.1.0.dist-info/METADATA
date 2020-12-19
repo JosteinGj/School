@@ -1,0 +1,37 @@
+Metadata-Version: 2.1
+Name: fenics
+Version: 2019.1.0
+Summary: The FEniCS Project Python Metapackage
+Home-page: https://bitbucket.org/fenics-project
+Author: The FEniCS Project contributors
+Requires-Dist: fenics-ffc (<2019.2,>=2019.1.0)
+Requires-Dist: fenics-fiat (<2019.2,>=2019.1.0)
+Requires-Dist: fenics-ufl (<2019.2,>=2019.1.0)
+Requires-Dist: fenics-dijitso (<2019.2,>=2019.1.0)
+
+Author-email: fenics-dev@googlegroups.com
+Maintainer-email: fenics-dev@googlegroups.com
+License: LGPL version 3 or later
+Description: UNKNOWN
+Platform: Windows
+Platform: Linux
+Platform: Solaris
+Platform: Mac OS-X
+Platform: Unix
+Classifier: Development Status :: 5 - Production/Stable
+Classifier: Intended Audience :: Developers
+Classifier: Intended Audience :: Science/Research
+Classifier: License :: OSI Approved :: GNU Lesser General Public License v3 or later (LGPLv3+)
+Classifier: Operating System :: POSIX
+Classifier: Operating System :: POSIX :: Linux
+Classifier: Operating System :: MacOS :: MacOS X
+Classifier: Operating System :: Microsoft :: Windows
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 2
+Classifier: Programming Language :: Python :: 2.7
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.4
+Classifier: Programming Language :: Python :: 3.5
+Classifier: Programming Language :: Python :: 3.6
+Classifier: Topic :: Scientific/Engineering :: Mathematics
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

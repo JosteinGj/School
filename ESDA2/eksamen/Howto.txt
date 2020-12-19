@@ -1,0 +1,5 @@
+-Opprett bruker på sharelatex.com	(Bruk stud. mail)
+-Opprett et tomt dokument og kopier over innholdet i designnotat.tex filen.
+	(designnotat.tex kan åpnes i TextEdit/Notepad eller lignende)
+-Last opp figurene og kompilér
+

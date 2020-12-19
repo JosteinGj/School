@@ -173,6 +173,4 @@ def task2():
         print(f"variance of estimator N={val}: ",np.var( averages.flatten()))
         
 
-
-
 task2()

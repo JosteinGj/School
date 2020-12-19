@@ -46,7 +46,7 @@ def task2():
     filters = calc_perdictor_coefs(True)
     for filth in filters:
         f = filth
-        filth = np.insert(arr=filth, obj=0, values=0)
+        filth = np.insert(arr=filth, obj=0, values=1)
         
         
         x_pred = sig.lfilter(filth, 1, x)
@@ -54,8 +54,8 @@ def task2():
         print("mse: ",mse)
         print("filth: ",filth)
         w, h = sig.freqz(filth,mse,worN=2048)
-
-        plt.plot(w,h,label="freqz output")
+        
+        plt.plot(w,h*np.conj(h),label="freqz output")
         if i==1:
             plt.plot(w,1.4-0.8*np.cos(w),label="calculated PDS estimate")
         elif i==2:
