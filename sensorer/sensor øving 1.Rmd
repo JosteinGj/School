@@ -1,0 +1,108 @@
+---
+title: "sensorer øving 1"
+author: "Jostein Gjesdal"
+date: "18 1 2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+# Oppgave 1:
+## a
+```{r cars}
+temps <- c(20.6,20.4,20.4,20.6,20.4,20.8,20.5,20.5,20.5,20.4,20.5,20.5,20.5,20.5,20.4,20.4,20.4,20.5,20.3,20.6)
+temps.mean <- mean(temps)
+n<-length(temps)
+"standard deviation"
+temps.s <- sd(temps)
+
+
+
+```
+## b
+```{r}
+error <- qt(0.975,n-1)*temps.s/sqrt(n)
+left<- temps.mean-error
+right<- temps.mean+error
+"95% confidence interval"
+c(left,right)
+```
+## c
+```{r}
+
+perror <- qt(0.975,n-1)
+pleft<- temps.mean-perror*temps.s*sqrt(1+1/n)
+pright<- temps.mean+perror*temps.s*sqrt(1+1/n)
+"95% prediction interval"
+c(pleft,pright)
+```
+
+# oppgave 2:
+## a, b
+```{r task2}
+temps2<- c(20.4,20.4,20.4,20.2,20.4,20.3,20.4,20.5,20.4,20.4,20.4,20.4,20.1,20.3,20.3,20.2,20.3,20.2,20.3,20.3)
+temps2.mean <- mean(temps2)
+n2<-length(temps2)
+temps2.s <- sd(temps2)
+error2 <- qt(0.975,n2-1)*temps2.s/sqrt(n2)
+left2<- temps2.mean-error2
+right2<- temps2.mean+error2
+c(left2,right2)
+
+```
+de to konfidens intervallene overlapper ikke, vi kan  si det er signifikant forksjell på de to verdiene 
+
+## c
+```{r}
+temps3<-c(20.4,20.4,20.4,20.2,20.4,20.3,20.4,20.5,20.4,20.4)
+temps3.mean=mean(temps3)
+n3=length(temps3)
+temps3.mean
+temps3.s <-sd(temps3)
+err3 <- qt(0.975,n3-1)
+left3 <-temps3.mean-err3
+right3<- temps3.mean+err3
+c(left3,right3)
+
+```
+med bare de 10 første verdiene er intervallet for oppg 2 stort nok til at intervallet overlapper, vi kan da ikke si de er statistisk signifikant forskjellige.
+
+# oppgave 3:
+
+
+## a, b
+```{r}
+maxval=1000*1.01
+minval=1000*0.99
+c(minval,maxval)
+sd.1k_resistor = sqrt((maxval-minval)**2/12)
+sd.1k_resistor 
+rel.sd.1kresistor=sd.1k_resistor*100/1000
+rel.sd.1kresistor
+```
+## c
+antar fortsatt 1% presisjon
+den nye sannsynlighetstettheten er gitt ved konvolusjonen av sannsynlighetstettheten til hver av de to andre, skalert for areal 1.
+$$
+f(x)=1/10(u(x-495)-u(x-505))\\
+f(y)=Conv(f(x),f(x))\\
+f(y)=1/100((x-1010)u(x-1010)-2(x-1000)u(x-1000)+(x-990)u(x-990)
+$$
+
+f(y) blir en trekant funksjon fra 990-1010 med top på 0.1 ved 1000.
+
+## d
+
+standard avviket er gitt ved
+
+$$
+sd(x)=Var(x)^{1/2}=(E[x^2]-E[x]^2)^{1/2}\\
+E[x]=1000, fra symetri.\\
+E[x^2]=\int_{990}^{1010} f(y)x^2=2013400-3040150=\frac{3000050}{3}\\
+Var(x)=\frac{3000050}{3}-1000^2=\frac{50}{3}\\
+sd(x)=\sqrt {Var(x)}=\sqrt\frac{50}{3}\implies \sqrt\frac{50}{3}*100/1000 =0.408\%\\
+$$
+
