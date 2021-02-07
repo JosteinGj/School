@@ -1,0 +1,108 @@
+---
+title: "sensor4"
+author: "Jostein Gjesdal"
+date: "2/7/2021"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+$$
+\alpha_{absorbent}=\frac{24\ln(10V)}{cS_{absorbent}}\left(\frac{1}{T_{60,med}}-\frac{1}{T_{60,uten}}\right)\\
+
+
+$$
+anta $c,V,S_{absorbent}$ er eksakte. vi kjenner og $Var(T_{60,med}=\sigma^2_{T_m}$ og $Var(T_{60,uten}=\sigma^2_{T_m}$.
+
+Vi bruker feilforplantning ved varians og får
+$$
+\sigma_\alpha = \sqrt{\left(\sigma^2_{T_m}\frac{\partial \alpha}{\partial T_{60,med}}\right)^2 + \sigma^2_{T_u}\left(\frac{\partial \alpha}{\partial T_{60,uten}}\right)^2}\\
+=\frac{24\ln(10V)}{cS_{absorbent}}\sqrt{\ \frac{\sigma^2_{T_m}}{T^2_{60,med}} + \frac{\sigma^2_{T_u}}{T^2_{60,uten}}}
+$$
+```{r}
+t.med = c(3.13, 3.31, 3.47, 4.12, 3.95, 3.36, 3.38, 3.70)
+t.uten  = c(4.28, 4.28, 4.13, 3.76, 4.14, 4.33, 4.10, 4.21)
+var.T.m = var(t.med)
+var.T.u = var(t.uten)
+var.T.u
+var.T.m
+V=240
+S=10
+sos=343.4
+alpha = (24*log(10*V)) /(S*sos) *(1/t.med-1/t.uten)
+alpha
+sd.alpha=sd(alpha)
+sd.alpha
+n=8
+error=qt(0.975, n-1)*sd.alpha/srt(n)
+
+conf.int=c(mean(alpha)-error,mean(alpha)+error)
+
+      
+         
+```
+
+## opg 2 
+
+På vektor form har vi at Residual square sum eller MSE er. 
+$$
+
+(y-X\beta)^T(y-X\beta)\\
+= y^T y -y^T X \beta -\beta^T X^T y +\beta^T X^T X \beta\\
+= y^T y -2 y^T X \beta  +\beta^T X^T X\beta\\
+$$
+optimaliser for beta: gir
+$$
+  \frac{d}{d\beta}(y^T y -2 y^T X \beta  +\beta^T X^T X\beta )= 0\\
+  =-2 X^T y + 2 X^T X \beta = 0\\
+  \implies X^TX\beta=X^Ty\\
+  \implies \hat\beta_\lambda=(X^TX)^{-1}X^Ty
+$$
+
+
+der $X$ er kovariat matrisen, her en vektor da vi ikke har med konstantledd og det kun er en kovariat, $\beta$ er regressjonskoeffisientene og $y$ er respons vektoren.
+
+
+#### a
+
+forventnisgs verdien er denn samme siden estimatene vår er unbiased (ka e d på norsk???).
+Vi ser enkelt at de er unbiased ettersom de kun har en normarfordelt støy og den støyen er unbiased
+#### b
+
+$$
+Var(d)=Var(y-x)=Var(x)+Var(y)-2Cov(x,y)\\
+\text{x,y uavh. gir:} Cov(x,y)=0\\
+Var(d)=Var(X)+Var(y)\\
+\sigma_d=\sqrt{Var(x)+Var(y)}
+$$
+#### c
+$$
+d=f(x,y)=\sqrt{(y-x)^2}\\
+
+\frac{\partial f}{\partial x}=\frac{x-y}{\sqrt{(y-x)^2}}\\
+
+\frac{\partial f}{\partial y}=\frac{y-x}{\sqrt{(y-x)^2}}\\
+
+
+\sigma_d= \sqrt{\sigma^2_x(\frac{\partial f}{\partial x})^2 + \sigma^2_y(\frac{\partial f}{\partial y})^2}\\
+
+\sigma_d= \sqrt{\sigma^2_x(\frac{y-x}{\sqrt{(x-y)^2}})^2 + \sigma^2_y(\frac{y-x}{\sqrt{(y-x)^2}})^2}\\
+
+
+\sigma_d= \sqrt{\sigma^2_x\frac{(y-x)^2}{{(x-y)^2}} + \sigma^2_y\frac{(y-x)^2}{{(y-x)^2}}}\\
+\sigma_d=\sqrt{\sigma_x^2+\sigma_y^2}
+$$
+
+
+
+
+$$
+E[d^2]=E[(y_i-x_i)^2]=E[y^2_i-2y_ix_i+ x_i^2]\\
+E[y^2_i]-2E[y_ix_i]+ E[x_i^2] = y^2_s+\sigma_x+x_s^2+\sigma_x=E[d^2]\\
+
+2E[y_ix_i]=0 \text{ siden målingene er uavhengige}
+$$
