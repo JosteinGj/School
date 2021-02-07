@@ -1,0 +1,709 @@
+---
+subtitle: "TMA4268 Statistical Learning V2019"
+title: "Compulsory exercise 1: 35"
+author: "Jostein Gjesdal, Jesper Bengston"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_document
+ # pdf_document
+---
+  
+```{r setup, include=FALSE}
+library(knitr)
+knitr::opts_chunk$set(echo = TRUE,tidy=TRUE,message=FALSE,warning=FALSE,strip.white=TRUE,prompt=FALSE,
+                      cache=TRUE, size="scriptsize",fig.width=4, fig.height=3)
+
+
+```
+
+
+```{r echo=F, eval= T}
+library("ggplot2")  #plotting with ggplot
+library("ISLR")
+library("MASS")
+library("GGally")
+library("glmnet")
+library("e1071")
+library("tree")
+library("leaps")
+library("randomForest")
+library("gbm") 
+library("ggfortify")
+library("gam")
+library("splines")
+library("MLmetrics")
+library("formatR")
+
+```
+
+# Problem 1
+
+
+
+
+## a)
+The ridge regression estimator coefficients are the ones that minimize the equation:
+
+$$RSS+\lambda\sum_{j=1}^p \beta_j^2$$
+with $\lambda$ >0 a tuning parameter.
+
+We will now show that the estimator is given on closed form as:
+$$
+\hat\beta_\lambda=(X^TX+\lambda I)^{-1}X^Ty
+$$
+written on vectorform we have:
+$$
+RSS+\lambda\sum_{j=1}^p \beta_j^2\\
+=(y-X\beta)^T(y-X\beta)+\lambda\beta^T\beta\\
+= (y^T y -y^T X \beta -\beta^T X^T y +\beta^T X^T X \beta) +\lambda I \beta^T\beta\\
+= (y^T y -2 y^T X \beta  +\beta^T X^T X\beta) +\lambda I\beta^T \beta\\
+$$
+Optimizing for $\beta$ we then get:
+$$
+  \frac{d}{d\beta}(y^T y -2 y^T X \beta  +\beta^T X^T X\beta +\lambda I \beta^T\beta )= 0\\
+  =-2 X^T y + 2 X^T X \beta + 2\lambda I \beta = 0\\
+  \implies (X^TX+\lambda I)\beta=X^Ty\\
+  \implies \hat\beta_\lambda=(X^TX+\lambda I)^{-1}X^Ty
+$$
+  
+
+## b)
+We will now find expressions for the expected value and the covariance matrix for the ridge regression estimator.
+
+### Expected value:
+The expected value is found by direct computation as,
+$$E[\hat\beta_\lambda]=E[(X^TX+\lambda I)^{-1}X^Ty]\\
+E[\hat\beta_\lambda]=E[(X^TX+\lambda I)^{-1}X^T(X\beta+\epsilon)]\\
+E[\hat\beta_\lambda]=(X^TX+\lambda I)^{-1}X^T(X\beta+E[\epsilon])\\
+E[\hat\beta_\lambda]=(X^TX+\lambda I)^{-1}X^TX\beta\\$$
+
+### Covariance matrix:
+First we express the ridge estimator as a function of the ordinary linear regression estimator,
+$$\hat\beta_\lambda=(X^TX+\lambda I)^{-1}X^Ty\\
+=(X^TX+\lambda I)^{-1}X^T[X(X^TX)^{-1}X^T]y\\
+=(X^TX+\lambda I)^{-1}X^TX\hat\beta\\$$
+
+
+Now we use that $Var(aX)=a^2Var(X)$ to find the variance of the ridge estimator.
+
+$$
+Var(\hat\beta_\lambda)=Var((X^TX+\lambda I)^{-1}X^TX\hat\beta)\\
+=((X^TX+\lambda I)^{-1}X^TX)^T((X^TX+\lambda I)^{-1}X^TX)Var(\beta)\\
+=((X^TX+\lambda I)^{-1}X^TX)^T((X^TX+\lambda I)^{-1}X^TX)\sigma^2\\
+$$
+
+
+
+## c)
+
+i.   TRUE
+ii.  FALSE
+iii. FALSE
+iv.  TRUE
+
+
+## d)
+
+```{r  eval=T, echo=T}
+library(ISLR)
+set.seed(1)
+train.ind = sample(1:nrow(College), 0.5 * nrow(College))
+college.train = College[train.ind, ]
+college.test = College[-train.ind, ]
+```
+```{r eval=T}
+
+nvars = ncol(College)-1
+modelselection = regsubsets(Outstate ~ ., data = college.train, nbest= 1,nvmax=nvars, method = "forward")
+
+bestn=which.max(summary(modelselection)$adjr2)
+bestn
+vars=summary(modelselection)$which[bestn,][-1]
+summary(modelselection)$adjr2
+
+newdata = cbind(college.train["Outstate"],college.train[vars])
+college.lm= lm(Outstate ~ .,data=newdata)
+
+summary(college.lm)
+
+college.lm.preds= predict(college.lm,newdata = college.test)
+forwardMSE=MSE(college.lm.preds,college.test$Outstate)
+forwardMSE
+```
+The model is then given by the formula 
+
+$$
+\hat y_i = \hat\beta_0+x_i^T\hat\beta  
+$$
+with $\beta$ a column vector containing the coefficients as given in the summary and $x_i^T$ a row vector containing corresponding data values.
+
+
+We chose to use the adjusted $R^2$ as a criterion  for selecting our model. We found that the best model is the 14 covariate model with an adjusted $R^2=0.7706887$ 
+
+The adjusted $R^2$ was chosen because it is makes it possible to identify wether the covariates added to the model reduce the residuals significantly.
+
+
+## e)
+
+```{r eval=T, echo=T}
+
+xtrain = model.matrix(Outstate~.,college.train)[,-1]
+ytrain = college.train$Outstate
+
+xtest = model.matrix(Outstate~.,college.test)[,-1]
+ytest = college.test$Outstate
+
+cv.out= cv.glmnet(xtrain,ytrain,alpha=1)
+plot(cv.out)
+lambda.best=cv.out$lambda.min
+
+lambdas=c(1:200)
+for( i in 1:200)
+{
+  cv.hist= cv.glmnet(xtrain,ytrain,alpha=1)
+  lambdas[i]=cv.hist$lambda.min
+
+}
+set.seed(1234)
+qplot(lambdas,geom="histogram")
+median(lambdas)
+lasso.model = glmnet(xtrain,ytrain,alpha=1,lambda=lambda.best)
+lasso.model$beta
+lasso.prediction = predict(lasso.model,newx = xtest)
+lambda.best
+lassoMSE=MSE(lasso.prediction,ytest)
+lassoMSE
+```
+
+
+The optimal lambda was found to be about $8.9$. It was found by using crossvalidation. 
+
+As we can see from the beta vector none of the variables are set completely to zero. The MSE was approximately $3.135e7$. 
+
+It should be noted that the optimal $\lambda$ value varies quite a bit with the seed. to demonstrate this we generated a histogram for 200 different crossvalidations. 
+
+
+
+
+# Problem 2
+
+## a)
+
+i.FALSE
+
+ii. TRUE
+
+iii. TRUE
+
+iv. TRUE
+
+## b)
+
+A cubic spline with knots at $q_1, q_2, q_3$ will have a basis given by:
+$$
+b_1=x_i\\
+b_2=x_i^2\\
+b_3=x_i^3\\
+b_{k+3}=(x_i-q_k)^3u(x_i-q_k), \ k =1, 2, 3
+$$
+Where $u(x_i-q_i)$ is the heaviside step function.
+
+## c)
+
+```{r}
+
+attach(college.train)
+fit = lm(Outstate~Private+Room.Board+Terminal+perc.alumni+Expend+Grad.Rate,data=college.train)
+summary(fit)
+autoplot(fit)
+plot(Private,Outstate,col="darkgrey", xlab="Private", ylab = "outstate")
+detach(college.train)
+```
+
+
+```{r fig.width=5,fig.height=5, eval=T, echo=T}
+
+
+attach(college.train)
+
+
+par(mfrow=c(2,2))
+
+
+## room plot
+boardlims=range(Room.Board)
+Room.Board.grid=seq(from=boardlims[1],to=boardlims[2])
+fit.room = lm(Outstate~Room.Board,data=college.train)
+
+roompreds=predict(fit.room,newdata=list(Room.Board=Room.Board.grid), se=T)
+smooth=smooth.spline(Room.Board,Outstate,df=5)
+
+plot(Room.Board,Outstate,col="darkgrey")
+lines(Room.Board.grid,roompreds$fit,lwd=2,col="blue")
+lines(smooth,lwd=2,col="darkgreen")
+
+## expend plot
+explims=range(Expend)
+expendgrid=seq(from = explims[1], to = explims[2])
+fit.expend = lm(Outstate ~ Expend, data = college.train)
+expendpreds = predict(fit.expend, newdata = list(Expend = expendgrid), se=T)
+smooth = smooth.spline(Expend, Outstate, df=4)
+plot(Expend, Outstate, col="darkgrey")
+lines(expendgrid, expendpreds$fit, lw=2, col="blue")
+lines(smooth, lwd=2, col="darkgreen")
+
+
+## grad plot
+gradlims = range(Grad.Rate)
+gradgrid = seq(from = gradlims[1], to = gradlims[2])
+fit.grad = lm(Outstate ~ Grad.Rate, data = college.train)
+gradpreds = predict(fit.grad, newdata = list(Grad.Rate = gradgrid), se=T)
+smooth = smooth.spline(Grad.Rate, Outstate, df=10)
+
+plot(Grad.Rate,Outstate,col="darkgrey")
+lines(gradgrid, gradpreds$fit, lw=2, col="blue")
+lines(smooth, lwd=2, col="darkgreen")
+
+## alumni plot
+alumlims = range(perc.alumni)
+alumgrid = seq(from = alumlims[1], to = alumlims[2])
+fit.alum = lm(Outstate ~ perc.alumni, data = college.train)
+alumpreds = predict(fit.alum, newdata = list(perc.alumni = alumgrid), se=T)
+alum.bands = cbind(alumpreds$fit + 2 * alumpreds$se, alumpreds$fit - 2 * alumpreds$se)
+smooth = smooth.spline(perc.alumni, Outstate, df=10)
+
+plot(perc.alumni,Outstate,col="darkgrey")
+lines(alumgrid, alumpreds$fit, lw=2, col="blue")
+lines(smooth, lwd=2, col="darkgreen")
+detach(college.train)
+```
+
+
+In these plots we compare the fit of a smooth spline to a linear regression for the quantitative variables, we can see from the plots that only the Expend covariate is not well estimated by a linear function.
+
+We refit the model with Expend fitted to a natural spline with $4$ degrees of freedom.
+```{r eval=T, echo=T}
+fit = gam(Outstate~Private+Room.Board+Terminal+perc.alumni+ns(Expend,df=4)+Grad.Rate,data=college.train)
+autoplot(fit)
+```
+we can see from our diagnostic plots that our fit is a bit better now.
+
+
+
+
+## d)
+
+### i.
+
+```{r,  eval=T, echo=T}
+attach(college.train)
+
+plot(Terminal,Outstate,col="darkgrey")
+lims=range(Terminal)
+Terminal.grid=seq(from=lims[1], to=lims[2])
+poly.MSEs= data.frame("degree"=1:10,"MSE"=1:10)
+for (d in 1:10)
+{
+  fit = lm(Outstate~poly(Terminal, degree=d), data=college.train)
+  preds = predict(fit, newdata = list(Terminal = Terminal.grid))
+  testpreds = predict(fit,newdata=as.data.frame(ytest))
+  poly.MSEs[d,2]=MSE(testpreds,ytest)
+  lines(Terminal.grid,preds,lwd=2,col=d)
+  
+}
+poly.MSEs[,2]
+which.min(poly.MSEs[,2])
+detach(college.train)
+```
+We fit a polynomial model with Terminal as the only covariate and polynomial degrees ranging from 1 through 10. We find that the MSE was smallest for the linear model at $1.8e7$
+
+
+### ii.
+
+```{r eval=T, echo=T}
+attach(college.train)
+plot(Expend,Outstate,col="darkgrey")
+splinefit = smooth.spline(Expend,Outstate,cv=T)
+splinefit$df
+lines(splinefit,lwd=2,col="darkgreen")
+spline.pred=predict(splinefit,newdata = ytest)
+mse.spline=MSE(spline.pred$y,ytest)
+
+detach(college.train)
+```
+The best fitting lambda value was found automatically using LOOCV giving about $4.66$ equivalent degrees of freedom.  
+
+### iii.
+
+the MSE for the polynimial and spline fit is given as:
+```{r}
+
+poly.MSEs[,2]
+
+mse.spline
+```
+
+The test-MSE for the linear model was$1.8e7$ indicating it fits best on the Outstate-Terminal data set. This is not what we expected as the trend in the dataset seems to follow a quadratic when inspected visually, in addition to the higher order polynomials being less biased. But it goes to show that sometimes even simple models can provide accurate results. It is harder to compare it to the splines MSE as the problem at hand is different and the splines are working on a much more nonlinear dataset. 
+
+The splines MSE was found to be $2.868e7$
+
+
+# Problem 3
+
+## a)
+
+i. False
+ii. True
+iii. True
+iv. False
+
+
+
+## b) 
+
+We chose to use random forrest in our regression model as it provides very good prediction errors. The problem with random forest is that the model becomes so complex it is essentially a black box, thus the model is very hard to interpret. 
+
+```{r}
+
+attach(college.train)
+testing=T
+if (testing)
+{
+  mtrymse = c(1:17)
+  for (m in 1:17)
+  { 
+    set.seed(14) 
+    altrf = randomForest(Outstate~., data = college.train, mtry = m)
+    altrf.preds = predict(altrf, college.test)
+    altrf.mse = MSE(altrf.preds, ytest)
+    mtrymse[m] = altrf.mse
+  }
+  seedmse = c(1:17)
+  for (s in 1:17)
+  { 
+    set.seed(s) 
+    seedrf = randomForest(Outstate~., data = college.train)
+    seedrf.preds = predict(seedrf, college.test)
+    seedrf.mse=MSE(seedrf.preds, ytest)
+    seedmse[s]=seedrf.mse
+  }
+plot(mtrymse, main = "test MSE as function of mtry, seed set", ylab = "test MSE")
+plot(seedmse, main = "test MSE for different seeds, mtry set", ylab = "test MSE")
+}
+
+set.seed(14)
+rf = randomForest(Outstate~., data = college.train)
+rf.preds = predict(rf, college.test)
+rf.mse = MSE(rf.preds, ytest)
+rf.mse
+detach(college.train)
+```
+
+We chose to use the default value for the size of the predictor subset, mtry. The optimal one seems to vary for different seeds.The minimal MSE does not seem to vary significantly for different seeds though. We tried exploring these effect as you can see in the code if you set the variable "testing"=True. We chose not to test varying both seed and predictor subset size as it would be numerically intensive to compute.
+
+The test MSE was found to be $2.58e6$.
+
+
+## c)
+```{r}
+lassoMSE
+forwardMSE
+poly.MSEs[,2]
+mse.spline
+rf.mse
+min(c(rf.mse,mse.spline,min(poly.MSEs[,2]),forwardMSE,lassoMSE))
+which.min(c(rf.mse,mse.spline,min(poly.MSEs[,2])))
+```
+The random forest method seems to give the best result in terms of MSE. The random forest method is however an aggregated tree model and as such it is nigh impossible to interpret the model. 
+
+If our goal was interpretability then the lasso regression would probably be most effective, Of the methods explored as it can be interpreted as a weighted linear regression, and for this data set had the lowest MSE of the interpretable methods. 
+
+# Problem 4
+
+
+```{r}
+id <- "1Fv6xwKLSZHldRAC1MrcK2mzdOYnbgv0E" # google file ID
+d.diabetes <- dget(sprintf("https://docs.google.com/uc?id=%s&export=download",
+id))
+d.train = d.diabetes$ctrain
+d.test = d.diabetes$ctest
+max(d.train$npreg)
+corrmat=cor(d.train)
+corrmat[5,6]
+ggplot(data=d.train)+geom_point(aes(x=glu,y=bmi,color=diabetes))
+ggplot(data=d.train)+geom_histogram(aes(x=npreg))
+mean(d.train$npreg)
+median(d.train$npreg)
+getmode <- function(v) {
+   uniqv <- unique(v)
+   uniqv[which.max(tabulate(match(v, uniqv)))]
+}
+getmode(d.train$npreg)
+```
+
+## a)
+
+i. TRUE
+ii. TRUE
+iii. TRUE
+iv. TRUE
+
+## b)
+
+```{r}
+set.seed(1)
+d.train$diabetes=as.factor(d.train$diabetes)
+d.test$diabetes=as.factor(d.test$diabetes)
+cv.lin = tune(svm, diabetes~., data=d.train, kernel="linear", ranges = list(cost=c(0.01,0.1,1,5,10,15,25,50)))
+
+svm.lin=cv.lin$best.model
+svm.lin.predictions = predict(svm.lin,d.test)
+svm.lin.table=table(d.test$diabetes,svm.lin.predictions)
+svm.lin.classerror = 1-sum(diag(svm.lin.table))/sum(svm.lin.table)
+
+cv.radial = tune(svm,diabetes ~ ., data = d.train, kernel = "radial", ranges = list(cost = c(0.01, 0.1, 1, 5, 10, 15,25, 50), gamma = c(0.0001, 0.001, 0.01, 0.1, 1, 5, 10)))
+
+svm.rad = cv.radial$best.model
+svm.rad.predictions = predict(svm.rad, d.test)
+svm.rad.table = table(d.test$diabetes, svm.rad.predictions)
+svm.rad.classerror = 1 - sum(diag(svm.rad.table)) / sum(svm.rad.table)
+svm.lin.table
+svm.lin.classerror
+svm.rad.table
+svm.rad.classerror
+```
+We fit 2 SVMs one with a linear kernel and one with a radial kernel. We found that the linear kernel worked best in this case, giving a misclassification error of $0.2284$, while the radial kernel machine gave an error of $0.2328$. The radial kernal also introduces more tuning parameters making the model more complex than it already is. We therefore conclude that the linear kernel machine is marginaly preferential in this case.
+
+
+## c)
+
+```{r}
+set.seed(1)
+
+diabetes.rf = randomForest(diabetes~.,data = d.train) 
+diabetes.rf.predictions = predict(diabetes.rf, d.test)
+diabetes.rf.table = table(d.test$diabetes, diabetes.rf.predictions)
+diabetes.rf.classerror = 1 - sum(diag(diabetes.rf.table)) / sum(diabetes.rf.table)
+
+diabetes.rf.table
+diabetes.rf.classerror
+
+tree.diab = tree(diabetes~., data = d.train, split = "deviance")
+cv.tree.diab = cv.tree(tree.diab, FUN = prune.misclass)
+best = which.min(cv.tree.diab$dev)
+
+bestsize = cv.tree.diab$size[best]
+tree.diab.pruned = prune.misclass(tree.diab, best = bestsize)
+plot(tree.diab.pruned)
+text(tree.diab.pruned,pretty = 1)
+
+tree.diab.predictions = predict(tree.diab.pruned, d.test, type="class")
+tree.diab.table = ConfusionMatrix(tree.diab.predictions, d.test$diabetes)
+tree.diab.classerror = 1 - sum(diag(tree.diab.table)) / sum(tree.diab.table)
+
+tree.diab.table
+tree.diab.classerror
+```
+We chose to train two different treebased models. A normal, non-aggregated classification tree and a random forest. We chose the normal clasification tree model as it is easy to interpret. We expected this simpler model to be slightly worse than the more complex svm models. In return we get a much more interpretable model. In addition to this interpretability the tree based models can be further analysed giving useful information about how accurate the prediction is.
+
+The tree model was found to have a classification error of about $0.241$ while the linear svm model had a classification error of $0.228$ giving $0.013$ difference in classification error.
+
+We also trained a random forest model on the data and found it gave a classification error of $0.237$ which is very comparable to the regular tree model giving a difference in error rate of $0.009$.
+
+
+
+
+## d)
+
+False
+False
+True
+True
+
+## e)
+
+show that the deviance of a logistic regression model with responses $y_i=-1,1$ has deviance
+$$
+\log(1+\exp(-y_if(x_i)))
+$$
+for the logistic regression model we have 
+$$
+P(y=1)=\frac{1}{1+\exp(-f(x_i))}
+$$
+Where $f(x_i)$ is a linear function.
+we have two responses possible in our model
+
+$$
+y_1=1\\
+y_2=-1
+$$
+Therefore we have
+
+$$
+P(y=-1)=1-P(y=1)=1-\frac{1}{1+\exp(-f(x_i))}=\frac{1}{1+\exp(f(x_i))}
+$$
+notice that in this encoding of the logistic regression we then have
+
+$$
+P(y=y_i)=\frac{1}{1+\exp(-y_if(x_i)\ )}
+$$
+We find the likelihood function
+$$
+L(\beta)=\prod_{i=1}^2P(y=y_i|x_i)
+$$
+we take the logarithm to find the log-likelihood function
+$$
+\log(L(\beta))=l(\beta)=-\sum_{i=1}^2log(1+\exp(-y_if(x_i)\thinspace ))
+$$
+the deviance is given by:
+$$
+Deviance = -2 l(\beta)\\
+\text{inserting our expression for }l(\beta)\\
+Deviance = 2\sum_{i=1}^2log(1+\exp(-y_if(x_i)\thinspace ))
+$$
+the factor 2 is not important for this problem. Comparing to the function given we see that we have shown what we wanted. 
+
+
+
+# problem 5
+
+
+## a)
+```{r}
+id <- "1VfVCQvWt121UN39NXZ4aR9Dmsbj-p9OU"  # google file ID
+GeneData <- read.csv(sprintf("https://docs.google.com/uc?id=%s&export=download", 
+    id), header = F)
+colnames(GeneData)[1:20] = paste(rep("H", 20), c(1:20), sep = "")
+colnames(GeneData)[21:40] = paste(rep("D", 20), c(1:20), sep = "")
+row.names(GeneData) = paste(rep("G", 1000), c(1:1000), sep = "")
+
+```
+
+```{r, fig.heigth=10,fig.width=10}
+gene.dist = dist(scale(t(GeneData)))
+gene.cor.dist = 1 - cor(scale(GeneData))
+
+gene.hclust.avg.euclid = hclust(gene.dist, method = "average")
+gene.hclust.single.euclid = hclust(gene.dist, method = "single")
+gene.hclust.comp.euclid = hclust(gene.dist, method = "complete")
+gene.hclust.avg.cor = hclust(as.dist(gene.cor.dist), method = "average")
+gene.hclust.single.cor = hclust(as.dist(gene.cor.dist), method = "single")
+gene.hclust.comp.cor = hclust(as.dist(gene.cor.dist), method = "complete")
+
+par(mfrow = c(1, 3))
+plot(gene.hclust.avg.euclid, main = "Euclidean distance, average linkage")
+plot(gene.hclust.comp.euclid, main = "Euclidean distance, complete linkage")
+plot(gene.hclust.single.euclid, main = "Euclidean distance, single linkage")
+plot(gene.hclust.avg.cor, main = "correlation distance, average linkage")
+plot(gene.hclust.comp.cor, main = "correlation distance, complete linkage")
+plot(gene.hclust.single.cor, main = "correlation distance, single linkage")
+```
+## b)
+```{r, fig.width=10}
+par(mfrow = c(1, 3))
+gene.hclust.single.euclid.cut2 = cutree(gene.hclust.single.euclid, 2)
+gene.hclust.avg.euclid.cut2 = cutree(gene.hclust.avg.euclid, 2)
+gene.hclust.comp.euclid.cut2 = cutree(gene.hclust.comp.euclid, 2)
+gene.hclust.comp.cor.cut2 = cutree(gene.hclust.comp.cor, 2)
+gene.hclust.single.cor.cut2 = cutree(gene.hclust.single.cor, 2)
+gene.hclust.avg.cor.cut2 = cutree(gene.hclust.avg.cor, 2)
+
+plot(gene.hclust.single.euclid.cut2, main = "2-clusters L^2 distance, single linkage", ylab = "cluster designation", xlab ="")
+abline(v = 20, col = "darkgrey", lty = 2)
+plot(gene.hclust.avg.euclid.cut2, main = "2-clusters L^2 distance, average linkage", ylab = "cluster designation", xlab = "")
+abline(v = 20, col = "darkgrey", lty = 2)
+plot(gene.hclust.comp.euclid.cut2, main = "2-clusters L^2 distance, complete linkage", ylab = "cluster designation", xlab ="")
+abline(v = 20, col = "darkgrey", lty = 2)
+plot(gene.hclust.single.cor.cut2, main = "2-clusters corr distance, single linkage", ylab = "cluster designation", xlab = "")
+abline(v = 20, col = "darkgrey", lty = 2)
+plot(gene.hclust.avg.cor.cut2, main = "2-clusters corr distance, average linkage", ylab = "cluster designation", xlab = "")
+abline(v = 20, col = "darkgrey", lty = 2)
+plot(gene.hclust.comp.cor.cut2, main = "2-clusters corr distance, complete linkage", ylab = "cluster designation", xlab = "")
+abline(v = 20, col = "darkgrey", lty = 2)
+
+truth=gene.hclust.single.euclid.cut2
+truth[1:20]=1
+truth[21:40]=2
+
+table(truth, gene.hclust.single.euclid.cut2)
+1 - sum(diag(table(truth, gene.hclust.single.euclid.cut2))) / sum(table(truth, gene.hclust.single.euclid.cut2))
+
+table(truth,gene.hclust.avg.euclid.cut2)
+1 - sum(diag(table(truth,gene.hclust.avg.euclid.cut2))) / sum(table(truth,gene.hclust.avg.euclid.cut2))
+
+table(truth, gene.hclust.comp.euclid.cut2)
+1 - sum(diag(table(truth, gene.hclust.comp.euclid.cut2)))/sum(table(truth, gene.hclust.comp.euclid.cut2))
+
+table(truth, gene.hclust.single.cor.cut2)
+1 - sum(diag(table(truth, gene.hclust.single.cor.cut2))) / sum(table(truth, gene.hclust.single.cor.cut2))
+
+table(truth, gene.hclust.avg.cor.cut2)
+1 - sum(diag(table(truth, gene.hclust.avg.cor.cut2))) / sum(table(truth, gene.hclust.avg.cor.cut2))
+
+table(truth,gene.hclust.comp.cor.cut2)
+1 - sum(diag(table(truth, gene.hclust.comp.cor.cut2))) / sum(table(truth, gene.hclust.comp.cor.cut2))
+```
+
+
+We can see that the trees using euclidean dintance prefectly cluster the healthy and deceased into seperate categories, meanwhile the correlation based methods fail to cluster the data as effectively. The correlation distance tree with single linkage was espesially bad as it clustered all observations except one to a single group.  
+
+
+
+## c)
+
+The $\phi_i$ denotes the $ith$ weight vector, also called loading vector, it is the unit eigenvector with the $ith$ largest corresponding eigenvalue of the covariance matrix. 
+
+The $p$ denotes the number of predictors, ie the number of columns in the data set.
+
+The $n$ denotes the number of observations, ie number of rows in the data set.
+
+The $x$ is the original data set, represented by a $n\cross p$ matrix.
+
+The first principal component is found by finding the eigenvalue decomposition of the covariance matrix$V^{-1}CV = D$ and taking the unit eigenvector corresponding to the largest eigenvalue. The Scores are then the coeficients in the column of $V^{-1}$ corresponding to said eigenvalue.
+
+## d)
+
+```{r}
+pr.out=prcomp(t(GeneData),scale=T,retx = T)
+colors <- rep("green", 40)
+colors[21:40] = "red"
+ggplot(data = as.data.frame(pr.out$x[,c(1,2)])) + geom_point(aes(x = PC1, y = PC2, color = colors))
+
+pr.var = pr.out$sdev^2
+pr.pve = pr.var/sum(pr.var)
+
+plot(pr.pve[1:5], xlab = "Principal component", ylab = "Prop. of variance explained", ylim = c(0, 0.5), type = 'b')
+plot(cumsum(pr.pve[1:5]), xlab = "Principal Component", ylab = "Cumulative PVE", ylim = c(0, 0.5), type = "b")
+cumsum(pr.pve[1:5])
+plot(abs(pr.out$rotation[,1]),main = "Loadings of PC1",xlab="Genes",ylab="|weight|")
+```
+In the plot of the loading vector for PC-1 we can see that there is a grouping of important genes around 500-600 and another smaller one around 0.
+
+The cumulative  fraction of variance explained by the first 5 PCs was found to be $0.211$
+
+## e)
+```{r}
+plot(abs(pr.out$rotation[,1]),main = "Loadings of PC1",xlab="Genes",ylab="|weight|")
+```
+
+
+
+## f)
+
+```{r}
+set.seed(1)
+gene.kmeans.fit = kmeans(t(GeneData),2)
+ggplot(data = as.data.frame(pr.out$x[,c(1,2)])) + geom_text(aes(x = PC1, y = PC2,label= row.names(as.data.frame(pr.out$x[,c(1,2)])), color = gene.kmeans.fit$cluster))
+
+
+plot(gene.kmeans.fit$cluster, main = "2-clusters corr distance, complete linkage", ylab = "cluster designation",xlab="")
+abline(v=20.5,col="darkgrey",lty=2)
+
+table(truth,gene.kmeans.fit$cluster)
+1-sum(diag(table(truth,gene.kmeans.fit$cluster)))/sum(table(truth,gene.kmeans.fit$cluster))
+```
+The k-means clustering algorithm was found to perfectly cluster this data into the two groups healthy and diseased.
+
+
+
+
